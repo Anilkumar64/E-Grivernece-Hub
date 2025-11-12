@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const adminSchema = new mongoose.Schema(
     {
@@ -10,58 +11,88 @@ const adminSchema = new mongoose.Schema(
         },
         email: {
             type: String,
-            required: [true, "Admin email is required"],
+            required: [true, "Email is required"],
             unique: true,
             lowercase: true,
+            trim: true,
+            validate: {
+                validator: function (value) {
+                    // ✅ Must be college domain like ".ac.in"
+                    return /^[\w-\.]+@[\w-]+\.(ac\.in)$/.test(value);
+                },
+                message: "Email must be a valid college email (.ac.in)",
+            },
         },
-        password: {
+        staffId: {
             type: String,
-            required: [true, "Password is required"],
-            minlength: 6,
+            required: [true, "Staff ID is required"],
+            unique: true,
+            trim: true,
+        },
+        department: {
+            type: String,
+            required: [true, "Department is required"],
         },
         role: {
             type: String,
             enum: ["superadmin", "departmentadmin"],
             default: "departmentadmin",
         },
-        department: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Department",
-            default: null,
+        password: {
+            type: String,
+            required: [true, "Password is required"],
+            minlength: [6, "Password must be at least 6 characters long"],
         },
-        phone: {
+        idCardFile: {
+            type: String, // file URL or path (like /uploads/idcards/...)
+        },
+        Refreshtoken: {
             type: String,
         },
-        avatar: {
-            type: String,
-        },
-        lastLogin: {
-            type: Date,
-            default: null,
-        },
-        isActive: {
+        verified: {
             type: Boolean,
-            default: true,
+            default: false, // Set to true after admin verification
         },
     },
     { timestamps: true }
 );
 
-
+// 🔒 Encrypt password before saving
 adminSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = await bcrypt.hash(this.password, 10);
     next();
 });
 
-adminSchema.methods.matchPassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
+// 🔍 Compare passwords
+adminSchema.methods.isPasswordCorrect = async function (password) {
+    return await bcrypt.compare(password, this.password);
 };
 
-adminSchema.methods.updateLastLogin = async function () {
-    this.lastLogin = new Date();
-    await this.save();
+// 🔑 Generate tokens
+adminSchema.methods.generateAccessToken = function () {
+    return jwt.sign(
+        {
+            _id: this._id,
+            email: this.email,
+            role: this.role,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
+    );
 };
 
-export default mongoose.model("Admin", adminSchema);
+adminSchema.methods.generateRefreshToken = function () {
+    return jwt.sign(
+        {
+            _id: this._id,
+            email: this.email,
+            role: this.role,
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+    );
+};
+
+const Admin = mongoose.model("Admin", adminSchema);
+export { Admin };
