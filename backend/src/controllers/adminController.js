@@ -1,9 +1,21 @@
-import { Admin } from "../models/Admin.js";
+import Admin from "../models/Admin.js";
+// import sendEmail from "../utils/sendEmail.js";
+
 import jwt from "jsonwebtoken";
 
-/* ------------------------------------------------------------------
- 🧱 REGISTER ADMIN (Secure Version)
------------------------------------------------------------------- */
+
+// await sendEmail({
+//     to: updated.email,
+//     subject: "🎉 Admin Approved - E-Griverence Hub",
+//     html: `
+//     <h2>Hello ${updated.name || updated.username},</h2>
+//     <p>Your admin account has been approved by the SuperAdmin.</p>
+//     <p>You may now login and manage grievances.</p>
+//     <br/>
+//     <p>Regards,<br>E-Griverence Hub Team</p>
+//   `,
+// });
+
 export const registerAdmin = async (req, res) => {
     try {
         const { name, email, staffId, department, password, role } = req.body;

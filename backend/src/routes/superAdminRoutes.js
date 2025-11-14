@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-// Only SuperAdmin can access
+
 router.get("/pending", verifySuperAdmin, getPendingAdmins);
 router.patch("/approve/:id", verifySuperAdmin, approveAdmin);
 router.delete("/reject/:id", verifySuperAdmin, rejectAdmin);

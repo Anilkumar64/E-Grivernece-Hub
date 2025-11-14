@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const connectDB = async () => {
+export const connectDB = async () => {
     try {
         const connection = await mongoose.connect(process.env.MONGODB_URL, {
             dbName: "EgrievanceHub", // cleaner and centralized naming

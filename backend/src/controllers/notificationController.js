@@ -1,5 +1,5 @@
-import { Notification } from "../models/Notification.js";
-import { Admin } from "../models/Admin.js";
+import Notification from "../models/Notification.js";
+import Admin from "../models/Admin.js";
 
 /* ------------------------------------------------------------------
  🟩 CREATE NOTIFICATION

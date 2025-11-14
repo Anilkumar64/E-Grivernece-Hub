@@ -1,4 +1,4 @@
-import { admin } from "../models/Admin.js";
+import Admin from "../models/Admin.js";
 import jwt from "jsonwebtoken";
 import {
     generateAccessToken,
@@ -20,13 +20,13 @@ export const registerAdmin = async (req, res) => {
         }
 
         // ✅ Check if admin already exists
-        const existingAdmin = await admin.findOne({ username });
+        const existingAdmin = await Admin.findOne({ username });
         if (existingAdmin) {
             return res.status(400).json({ message: "Admin already registered" });
         }
 
         // ✅ Create new admin (password will hash automatically via pre-save hook)
-        const newAdmin = new admin({ username, password });
+        const newAdmin = new Admin({ username, password });
         await newAdmin.save();
 
         res
@@ -45,8 +45,8 @@ export const loginAdmin = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        // ✅ Check if admin exists
-        const adminUser = await admin.findOne({ username });
+        // ✅ Check if Admin exists
+        const adminUser = await Admin.findOne({ username });
         if (!adminUser) {
             return res.status(404).json({ message: "Admin not found" });
         }

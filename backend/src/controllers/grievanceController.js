@@ -3,6 +3,7 @@ import Grievance from "../models/Grievance.js";
 import User from "../models/User.js";
 import Department from "../models/Department.js";
 import Admin from "../models/Admin.js";
+
 import { sendEmail } from "../utils/sendEmail.js";
 
 /**
