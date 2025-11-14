@@ -14,6 +14,7 @@ import notificationRoutes from "./src/routes/notificationRoutes.js";
 import superAdminRoutes from "./src/routes/superAdminRoutes.js";
 import { notFound, errorHandler } from "./src/middleware/errorHandler.js";
 // import path from "path";
+import userRoutes from "./src/routes/userRoutes.js";
 
 
 dotenv.config();
@@ -35,6 +36,7 @@ const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/complaint-types", complaintTypeRoutes);
 
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
     res.json({

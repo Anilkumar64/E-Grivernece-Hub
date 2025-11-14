@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema(
         avatar: {
             type: String, // optional profile photo URL
         },
+        idCard: {
+            type: String, // stored file name or path
+            default: null,
+        },
         address: {
             type: String,
             default: null,
@@ -48,6 +52,19 @@ const userSchema = new mongoose.Schema(
             type: String, // e.g., "2nd Year", "Final Year"
             default: null,
         },
+        otp: {
+            type: String,
+            default: null,
+        },
+        otpExpire: {
+            type: Date,
+            default: null,
+        },
+        isVerified: {
+            type: Boolean,
+            default: false,
+        },
+
         grievances: [
             {
                 type: mongoose.Schema.Types.ObjectId,
