@@ -78,6 +78,62 @@ export const registerAdmin = async (req, res) => {
     }
 };
 
+
+export const loginAdmin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // 1️⃣ Validate inputs
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
+        // 2️⃣ Find admin using EMAIL (correct field)
+        const adminUser = await Admin.findOne({ email });
+
+        if (!adminUser) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+
+        // 3️⃣ Check if admin is verified by superadmin
+        if (!adminUser.verified) {
+            return res.status(403).json({ message: "Admin not verified by SuperAdmin" });
+        }
+
+        // 4️⃣ Check password
+        const isPasswordValid = await adminUser.isPasswordCorrect(password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+
+        // 5️⃣ Generate tokens
+        const accessToken = adminUser.generateAccessToken();
+        const refreshToken = adminUser.generateRefreshToken();
+
+        // 6️⃣ Save refresh token in DB
+        adminUser.Refreshtoken = refreshToken;
+        await adminUser.save({ validateBeforeSave: false });
+
+        // 7️⃣ Send response
+        res.status(200).json({
+            message: "Login successful",
+            accessToken,
+            refreshToken,
+            admin: {
+                id: adminUser._id,
+                name: adminUser.name,
+                email: adminUser.email,
+                department: adminUser.department,
+                role: adminUser.role,
+            },
+        });
+    } catch (error) {
+        console.error("Login Error:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 /* ------------------------------------------------------------------
  🟩 GET ALL PENDING ADMINS (SuperAdmin)
 ------------------------------------------------------------------ */
