@@ -4,7 +4,7 @@ import User from "../models/User.js";
 import Department from "../models/Department.js";
 import Admin from "../models/Admin.js";
 
-import { sendEmail } from "../utils/sendEmail.js";
+import sendEmail from "../utils/sendEmail.js";
 
 /**
  * @desc  Submit a new grievance (complaint)

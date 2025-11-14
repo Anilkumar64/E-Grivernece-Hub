@@ -1,20 +1,19 @@
 import Admin from "../models/Admin.js";
 import sendEmail from "../utils/sendEmail.js";
-
 import jwt from "jsonwebtoken";
 
 
-await sendEmail({
-    to: updated.email,
-    subject: "🎉 Admin Approved - E-Griverence Hub",
-    html: `
-    <h2>Hello ${updated.name || updated.username},</h2>
-    <p>Your admin account has been approved by the SuperAdmin.</p>
-    <p>You may now login and manage grievances.</p>
-    <br/>
-    <p>Regards,<br>E-Griverence Hub Team</p>
-  `,
-});
+// await sendEmail({
+//     to: updated.email,
+//     subject: "🎉 Admin Approved - E-Griverence Hub",
+//     html: `
+//     <h2>Hello ${updated.name || updated.username},</h2>
+//     <p>Your admin account has been approved by the SuperAdmin.</p>
+//     <p>You may now login and manage grievances.</p>
+//     <br/>
+//     <p>Regards,<br>E-Griverence Hub Team</p>
+//   `,
+// });
 
 export const registerAdmin = async (req, res) => {
     try {
@@ -166,9 +165,22 @@ export const approveAdmin = async (req, res) => {
             return res.status(404).json({ message: "Admin not found" });
         }
 
-        res
-            .status(200)
-            .json({ message: "Admin approved successfully ✅", admin: updated });
+        // 📩 Send approval email
+        await sendEmail({
+            to: updated.email,
+            subject: "🎉 Admin Approved - E-Grievance Hub",
+            html: `
+                <h2>Hello ${updated.name},</h2>
+                <p>Your admin account has been approved.</p>
+                <p>You can now login to the admin panel.</p>
+            `,
+        });
+
+        res.status(200).json({
+            message: "Admin approved successfully",
+            admin: updated,
+        });
+
     } catch (error) {
         console.error("Error approving admin:", error);
         res.status(500).json({ message: "Internal Server Error" });
