@@ -1,3 +1,5 @@
+// backend/src/controllers/complaintType/deleteType.js
+
 import ComplaintType from "../../models/ComplaintType.js";
 
 export const deleteType = async (req, res) => {
@@ -5,11 +7,24 @@ export const deleteType = async (req, res) => {
         const { id } = req.params;
 
         const removed = await ComplaintType.findByIdAndDelete(id);
-        if (!removed) return res.status(404).json({ message: "Not found" });
 
-        res.json({ message: "Complaint type deleted" });
-    } catch (err) {
-        console.error("deleteType error:", err);
-        res.status(500).json({ message: "Internal Server Error" });
+        if (!removed) {
+            return res.status(404).json({
+                success: false,
+                message: "Complaint type not found",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Complaint type deleted successfully",
+        });
+
+    } catch (error) {
+        console.error("Error in deleteType:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
     }
 };

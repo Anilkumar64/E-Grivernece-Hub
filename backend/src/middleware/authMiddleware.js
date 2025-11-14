@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import Admin from "../models/Admin.js";
 
 /* ------------------------------------------------------------------
- 🟢 Verify Access Token (Basic Auth Protection)
+🟢 Verify Access Token (Basic Auth Protection)
 ------------------------------------------------------------------ */
 export const verifyToken = async (req, res, next) => {
     try {
@@ -28,7 +28,7 @@ export const verifyToken = async (req, res, next) => {
 };
 
 /* ------------------------------------------------------------------
- 👑 Verify SuperAdmin Role (for approval & verification routes)
+👑 Verify SuperAdmin Role (for approval & verification routes)
 ------------------------------------------------------------------ */
 export const verifySuperAdmin = async (req, res, next) => {
     try {
