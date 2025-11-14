@@ -54,10 +54,6 @@ const userSchema = new mongoose.Schema(
                 ref: "Grievance",
             },
         ],
-        isVerified: {
-            type: Boolean,
-            default: false,
-        },
         resetToken: {
             type: String,
         },
