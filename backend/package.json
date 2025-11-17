@@ -22,7 +22,8 @@
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.10",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "recharts": "^3.4.1"
   },
   "main": "server.js",
   "author": "",

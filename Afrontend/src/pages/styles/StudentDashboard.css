@@ -1,0 +1,104 @@
+.student-dashboard {
+    padding: 30px;
+    background: #f8f9fe;
+    min-height: 100vh;
+}
+
+/* Welcome Box */
+.welcome-box {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+.welcome-box h2 {
+    margin-bottom: 5px;
+}
+
+.user-info p {
+    margin: 5px 0;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.quick-actions button {
+    flex: 1;
+    background: #005eff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.2s;
+}
+
+.quick-actions button:hover {
+    background: #003fba;
+}
+
+/* Complaint List */
+.recent-title {
+    margin-bottom: 15px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.complaint-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 20px;
+}
+
+.complaint-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-badge.pending {
+    background: #ffe7c2;
+    color: #b36b00;
+}
+
+.status-badge.in-progress {
+    background: #cfe8ff;
+    color: #0059c7;
+}
+
+.status-badge.resolved {
+    background: #d4f9d9;
+    color: #0a8a2d;
+}
+
+.status-badge.rejected {
+    background: #ffd5d5;
+    color: #c40000;
+}
+
+.view-btn {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: #222;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}

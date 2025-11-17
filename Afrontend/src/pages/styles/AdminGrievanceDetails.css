@@ -1,0 +1,164 @@
+.admin-grievance-details {
+    max-width: 1150px;
+    margin: 24px auto;
+    padding: 12px;
+}
+
+/* top area */
+.agd-top {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.agd-left {
+    flex: 1;
+    background: #fff;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.agd-right {
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* header */
+.agd-left h1 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+}
+
+.agd-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.agd-badge {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.agd-badge.pending {
+    background: #fff3cd;
+    color: #8a5f00;
+}
+
+.agd-badge.in-progress {
+    background: #e6f3ff;
+    color: #0553a6;
+}
+
+.agd-badge.resolved {
+    background: #dff7e6;
+    color: #0a8a2d;
+}
+
+.agd-badge.rejected {
+    background: #ffe6e6;
+    color: #aa0000;
+}
+
+.agd-desc {
+    color: #374151;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+/* action buttons */
+.agd-actions-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.agd-btn {
+    background: #0b61ff;
+    color: #fff;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.agd-btn.outline {
+    background: #fff;
+    color: #0b61ff;
+    border: 1px solid #0b61ff;
+}
+
+.agd-btn.danger {
+    background: #ff4d4f;
+    color: #fff;
+}
+
+/* sections */
+.agd-section {
+    margin-top: 12px;
+    background: #fbfdff;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #eef3ff;
+}
+
+.agd-section textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e6edf6;
+    margin-top: 8px;
+}
+
+/* right cards */
+.agd-card {
+    background: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.agd-card h4 {
+    margin: 0 0 8px 0;
+}
+
+/* attachments */
+.agd-attach {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.agd-attach a {
+    color: #0b61ff;
+    text-decoration: none;
+}
+
+/* timeline area */
+.agd-timeline-area {
+    margin-top: 20px;
+    background: transparent;
+}
+
+/* small screens */
+@media (max-width: 900px) {
+    .agd-top {
+        flex-direction: column;
+    }
+
+    .agd-right {
+        width: 100%;
+    }
+}

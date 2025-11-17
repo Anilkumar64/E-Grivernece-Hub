@@ -1,0 +1,83 @@
+.sa-dashboard {
+    padding: 30px;
+}
+
+.sa-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.sa-cards {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.sa-card {
+    background: white;
+    padding: 20px;
+    width: 180px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    text-align: center;
+}
+
+.sa-card h3 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.sa-card p {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.red {
+    color: #FF4F4F;
+}
+
+.green {
+    color: #28A745;
+}
+
+.yellow {
+    color: #FFBB28;
+}
+
+.sa-charts {
+    margin-top: 35px;
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.sa-chart-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.sa-overview {
+    margin-top: 35px;
+}
+
+.overview-grid {
+    display: flex;
+    gap: 20px;
+}
+
+.ov-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 260px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.ov-box h4 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}

@@ -5,19 +5,26 @@ import {
     getGrievanceByTrackingId,
     updateGrievanceStatus,
 } from "../controllers/grievanceController.js";
-import { verifyToken } from "../middleware/authMiddleware.js";
 
-
+import { verifyToken, verifySuperAdmin } from "../middleware/authMiddleware.js";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
-
-// Student routes
-router.post("/create", verifyToken, createGrievance);
+router.post(
+    "/",
+    verifyToken,
+    upload.array("attachments", 10),
+    createGrievance
+);
+router.post(
+    "/create",
+    verifyToken,
+    upload.array("attachments", 10),
+    createGrievance
+);
 
 router.get("/my", verifyToken, getMyGrievances);
 router.get("/:trackingId", verifyToken, getGrievanceByTrackingId);
-
-// Admin route to update status
 router.put("/:id/status", verifyToken, updateGrievanceStatus);
 
 export default router;

@@ -1,0 +1,111 @@
+.admin-grievances-page {
+    padding: 30px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.admin-grievances-page h1 {
+    margin-bottom: 20px;
+}
+
+.ag-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.ag-filters input,
+.ag-filters select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    outline: none;
+}
+
+.ag-table-wrapper {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+}
+
+.ag-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ag-table thead tr {
+    background: #f3f4f6;
+}
+
+.ag-table th,
+.ag-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ag-table tbody tr {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.ag-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.ag-empty {
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+}
+
+/* STATUS BADGES */
+.ag-badge {
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Status Colors */
+.status-pending {
+    background: #fff4d6;
+    color: #ac7a00;
+}
+
+.status-inprogress {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-resolved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-rejected {
+    background: #ffe4e6;
+    color: #be123c;
+}
+
+/* Priority Colors */
+.pri-low {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.pri-medium {
+    background: #fef9c3;
+    color: #a16207;
+}
+
+.pri-high {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.pri-critical {
+    background: #ffcccc;
+    color: #990000;
+}

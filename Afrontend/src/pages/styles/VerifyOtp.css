@@ -1,0 +1,74 @@
+.otp-container {
+    min-height: 100vh;
+    background: #eef3ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.otp-box {
+    background: #fff;
+    padding: 35px;
+    width: 400px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.otp-box h2 {
+    margin-bottom: 10px;
+}
+
+.otp-input-group {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.otp-input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccd3e0;
+    border-radius: 8px;
+    font-size: 1.1rem;
+}
+
+.btn-verify {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background: #0066ff;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-verify:hover {
+    background: #004ecc;
+}
+
+.resend-box {
+    margin-top: 18px;
+}
+
+.resend-btn {
+    padding: 8px 15px;
+    background: transparent;
+    border: 2px solid #0066ff;
+    color: #0066ff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.resend-btn:hover {
+    background: #0066ff;
+    color: #fff;
+}
+
+.back-login {
+    margin-top: 20px;
+    color: #0066ff;
+    cursor: pointer;
+}

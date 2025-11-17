@@ -9,6 +9,8 @@ import authRoutes from "./src/routes/authRoutes.js";
 import grievanceRoutes from "./src/routes/grievanceRoutes.js";
 import complaintTypeRoutes from "./src/routes/complaintTypeRoutes.js";
 
+import departmentRoutes from "./src/routes/departmentRoutes.js";
+
 
 import notificationRoutes from "./src/routes/notificationRoutes.js";
 import superAdminRoutes from "./src/routes/superAdminRoutes.js";
@@ -33,6 +35,7 @@ if (process.env.NODE_ENV !== "production") {
 const __dirname = path.resolve();
 
 // Serve files statically
+app.use("/api/departments", departmentRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/complaint-types", complaintTypeRoutes);
 

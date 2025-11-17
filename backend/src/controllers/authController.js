@@ -68,13 +68,12 @@ export const loginAdmin = async (req, res) => {
         // ✅ Send tokens to client
         res.status(200).json({
             message: "Login successful",
-            accessToken,
+            token: accessToken,   // added
+            accessToken,          // existing
             refreshToken,
-            admin: {
-                id: adminUser._id,
-                username: adminUser.username,
-            },
+            admin: adminUser
         });
+
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).json({ message: "Internal Server Error" });

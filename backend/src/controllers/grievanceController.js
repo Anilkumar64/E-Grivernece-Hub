@@ -1,33 +1,40 @@
-// src/controllers/grievanceController.js
 import Grievance from "../models/Grievance.js";
 import User from "../models/User.js";
 import Department from "../models/Department.js";
 import Admin from "../models/Admin.js";
-
 import sendEmail from "../utils/sendEmail.js";
 
 /**
- * @desc  Submit a new grievance (complaint)
- * @route POST /api/grievances
- * @access Private (student)
+ * @desc Submit a new grievance
+ * @route POST /api/grievances/create
+ * @access Private
  */
+
 export const createGrievance = async (req, res) => {
     try {
-        const { title, description, department, priority, isAnonymous, attachments } = req.body;
+        const { title, description, department, priority, isAnonymous } = req.body;
 
-        // logged-in user details from auth middleware
         const userId = req.user._id;
         const user = await User.findById(userId).select("name email");
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
+        if (!user) return res.status(404).json({ message: "User not found" });
 
         // ensure department exists
-        const dept = await Department.findById(department).populate("headOfDepartment", "name email");
+        const dept = await Department.findById(department)
+            .populate("headOfDepartment", "name email");
+
         if (!dept) return res.status(404).json({ message: "Department not found" });
 
-        // create grievance entry
+        // Handle attachments from multer
+        let attachments = [];
+        if (req.files && req.files.length > 0) {
+            attachments = req.files.map((file) => ({
+                fileName: file.originalname,
+                fileUrl: `/uploads/${file.filename}`,
+            }));
+        }
+
+        // create grievance
         const grievance = await Grievance.create({
             user: userId,
             userEmail: user.email,
@@ -35,74 +42,70 @@ export const createGrievance = async (req, res) => {
             title,
             description,
             priority,
-            isAnonymous,
+            isAnonymous: isAnonymous === "true",
             attachments,
+            timeline: [
+                {
+                    status: "submitted",
+                    message: "Grievance submitted",
+                },
+            ],
         });
 
-        // increment department complaint counters
+        // update department counters
         await Department.findByIdAndUpdate(department, {
             $inc: { totalComplaints: 1, activeComplaints: 1 },
         });
 
-        // prepare email content
+        // send emails
         const userEmailSubject = "Grievance Submitted Successfully";
-        const userEmailBody = `Dear ${user.name},\n\nYour grievance titled "${title}" has been successfully submitted.\nTracking ID: ${grievance.trackingId}\n\nWe will update you once it progresses.\n\nBest regards,\nE-Grievance Hub`;
+        const userEmailBody = `Dear ${user.name},
+Your grievance titled "${title}" has been submitted.
+Tracking ID: ${grievance.trackingId}
+You will receive updates as the grievance progresses.`;
 
-        const deptEmailSubject = `New Grievance Received: ${title}`;
-        const deptEmailBody = `Hello ${dept.name} Team,\n\nA new grievance has been submitted to your department.\n\nTitle: ${title}\nSubmitted By: ${isAnonymous ? "Anonymous" : user.name}\nUser Email: ${user.email}\nPriority: ${priority || "Medium"}\nTracking ID: ${grievance.trackingId}\n\nDescription:\n${description}\n\nPlease review and assign it to an admin.\n\n- E-Grievance Hub`;
+        const deptEmailBody = `New grievance submitted:
+Title: ${title}
+From: ${isAnonymous ? "Anonymous" : user.name}
+Tracking ID: ${grievance.trackingId}`;
 
-        // send emails in parallel (user + department + head of department if present)
-        const emailPromises = [
-            sendEmail(user.email, userEmailSubject, userEmailBody),         // confirmation to user
-            sendEmail(dept.email, deptEmailSubject, deptEmailBody),         // notification to dept mailbox
+        const emails = [
+            sendEmail(user.email, userEmailSubject, userEmailBody),
+            sendEmail(dept.email, `New grievance: ${title}`, deptEmailBody),
         ];
 
-        // if department has a headOfDepartment with email, notify them too
-        if (dept.headOfDepartment && dept.headOfDepartment.email) {
-            const hod = dept.headOfDepartment;
-            const hodEmailSubject = `Action Required: New Grievance for ${dept.name}`;
-            const hodEmailBody = `Dear ${hod.name},\n\nA new grievance has been filed under ${dept.name}.\n\nTitle: ${title}\nTracking ID: ${grievance.trackingId}\nSubmitted By: ${isAnonymous ? "Anonymous" : user.name} (${user.email})\n\nPlease assign or take necessary action.\n\n- E-Grievance Hub`;
-            emailPromises.push(sendEmail(hod.email, hodEmailSubject, hodEmailBody));
+        if (dept.headOfDepartment?.email) {
+            emails.push(
+                sendEmail(
+                    dept.headOfDepartment.email,
+                    "New grievance assigned",
+                    deptEmailBody
+                )
+            );
         }
 
-        // attempt to send all emails; we do not fail the request if email sending fails,
-        // but we log errors and include a flag in the response if desired.
-        let emailResults = [];
-        try {
-            emailResults = await Promise.allSettled(emailPromises);
-        } catch (e) {
-            // shouldn't reach here because Promise.allSettled never rejects, but just in case
-            console.error("Unexpected error while sending emails:", e);
-        }
-
-        // gather simple status for response
-        const emailSummary = emailResults.map((r, idx) => ({
-            index: idx,
-            status: r.status,
-            reason: r.reason?.message || null,
-        }));
+        await Promise.allSettled(emails);
 
         res.status(201).json({
             message: "Grievance submitted successfully",
             grievance,
-            emailSummary,
         });
+
     } catch (error) {
-        console.error("Error submitting grievance:", error);
+        console.error("Create grievance error:", error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
 
 /**
- * @desc  Get all grievances for logged-in user
- * @route GET /api/grievances/my
- * @access Private (student)
+ * @desc Get grievances of logged-in user
  */
 export const getMyGrievances = async (req, res) => {
     try {
         const grievances = await Grievance.find({ user: req.user._id })
-            .populate("department", "name code")
+            .populate("department", "name")
             .sort({ createdAt: -1 });
+
         res.json(grievances);
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch grievances" });
@@ -110,9 +113,7 @@ export const getMyGrievances = async (req, res) => {
 };
 
 /**
- * @desc  Get grievance details by tracking ID
- * @route GET /api/grievances/:trackingId
- * @access Private
+ * @desc Get grievance by tracking ID
  */
 export const getGrievanceByTrackingId = async (req, res) => {
     try {
@@ -120,7 +121,8 @@ export const getGrievanceByTrackingId = async (req, res) => {
             trackingId: req.params.trackingId,
         })
             .populate("user", "name email")
-            .populate("department", "name");
+            .populate("department", "name")
+            .populate("assignedTo", "name email");
 
         if (!grievance)
             return res.status(404).json({ message: "Grievance not found" });
@@ -132,23 +134,39 @@ export const getGrievanceByTrackingId = async (req, res) => {
 };
 
 /**
- * @desc  Admin updates grievance status
+ * @desc Update grievance status (admin)
  * @route PUT /api/grievances/:id/status
- * @access Private (admin)
  */
 export const updateGrievanceStatus = async (req, res) => {
     try {
-        const { status, adminRemarks } = req.body;
+        const { status, adminRemarks, assignedTo } = req.body;
+
+        const validStatuses = ["submitted", "in_progress", "resolved", "rejected"];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ message: "Invalid status" });
+        }
+
         const grievance = await Grievance.findById(req.params.id);
 
         if (!grievance)
             return res.status(404).json({ message: "Grievance not found" });
 
+        // update fields
         grievance.status = status;
-        grievance.adminRemarks = adminRemarks;
+        grievance.adminRemarks = adminRemarks || grievance.adminRemarks;
 
-        if (status === "Resolved" || status === "Rejected") {
+        if (assignedTo) grievance.assignedTo = assignedTo;
+
+        // add timeline entry
+        grievance.timeline.push({
+            status,
+            message: adminRemarks || "",
+        });
+
+        // update department counters
+        if (status === "resolved" || status === "rejected") {
             grievance.resolutionDate = new Date();
+
             await Department.findByIdAndUpdate(grievance.department, {
                 $inc: { activeComplaints: -1, resolvedComplaints: 1 },
             });
@@ -156,14 +174,18 @@ export const updateGrievanceStatus = async (req, res) => {
 
         await grievance.save();
 
-        // email update to user
+        // notify user
         await sendEmail(
             grievance.userEmail,
-            `Grievance Status Update: ${status}`,
-            `Your grievance "${grievance.title}" has been updated to "${status}".\n\nRemarks: ${adminRemarks || "No remarks provided."}\n\nTracking ID: ${grievance.trackingId}\n\n- E-Grievance Hub`
+            `Grievance Status Updated: ${status}`,
+            `Your grievance titled "${grievance.title}" is now "${status}".`
         );
 
-        res.json({ message: "Grievance status updated successfully", grievance });
+        res.json({
+            message: "Status updated successfully",
+            grievance,
+        });
+
     } catch (error) {
         res.status(500).json({ message: "Failed to update grievance", error });
     }
