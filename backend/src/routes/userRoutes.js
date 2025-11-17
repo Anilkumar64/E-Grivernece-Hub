@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, verifyOTP, loginUser } from "../controllers/userController.js";
+import { registerUser, rverifyOTP, loginUser } from "../controllers/userController.js";
 
 import {
     forgotPassword,
